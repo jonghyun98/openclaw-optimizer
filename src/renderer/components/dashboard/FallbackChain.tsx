@@ -37,7 +37,7 @@ export const FallbackChain: React.FC<FallbackChainProps> = ({ chain, recommended
   };
 
   return (
-    <div className="bg-gray-900 rounded-xl border border-gray-800 p-4">
+    <div className="glass-card rounded-xl p-4">
       <h3 className="text-sm font-medium text-gray-300 mb-3">Fallback Chain</h3>
 
       {chain && (
