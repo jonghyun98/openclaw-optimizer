@@ -11,8 +11,12 @@ import { ChainOptimizer } from './optimizer/chain-optimizer';
 import { serviceBus } from './service-bus';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
-if (require('electron-squirrel-startup')) {
-  app.quit();
+try {
+  if (require('electron-squirrel-startup')) {
+    app.quit();
+  }
+} catch {
+  // Not on Windows/Squirrel, ignore
 }
 
 let mainWindow: BrowserWindow | null = null;
@@ -85,9 +89,22 @@ async function initServices(): Promise<void> {
   console.log('[ClawPilot] Services initialized');
 }
 
+process.on('uncaughtException', (err) => {
+  console.error('[ClawPilot] UNCAUGHT EXCEPTION:', err);
+});
+process.on('unhandledRejection', (err) => {
+  console.error('[ClawPilot] UNHANDLED REJECTION:', err);
+});
+
 app.whenReady().then(async () => {
-  await initServices();
+  try {
+    await initServices();
+    console.log('[ClawPilot] Services ready');
+  } catch (err) {
+    console.error('[ClawPilot] Failed to init services:', err);
+  }
   createWindow();
+  console.log('[ClawPilot] Window created');
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

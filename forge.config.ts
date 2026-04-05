@@ -1,5 +1,6 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
 import { VitePlugin } from '@electron-forge/plugin-vite';
+import path from 'node:path';
 
 const config: ForgeConfig = {
   packagerConfig: {
@@ -32,6 +33,12 @@ const config: ForgeConfig = {
       ],
     }),
   ],
+  hooks: {
+    preStart: async (_config, run) => {
+      // Set NODE_PATH so Electron can find native modules from .vite/build/
+      process.env.NODE_PATH = path.resolve(__dirname, 'node_modules');
+    },
+  },
 };
 
 export default config;
