@@ -7,12 +7,14 @@ import { OptimizerPage } from './pages/OptimizerPage';
 import { AlertsPage } from './pages/AlertsPage';
 import { SettingsPage } from './pages/SettingsPage';
 import { CostPage } from './pages/CostPage';
+import { SimulatorPage } from './pages/SimulatorPage';
 
 const pageNames: Record<string, string> = {
   dashboard: 'Dashboard',
   optimizer: 'Fallback Optimizer',
   cost: 'Cost Analytics',
   alerts: 'Alerts',
+  simulator: 'Fallback Simulator',
   settings: 'Settings',
 };
 
@@ -31,6 +33,8 @@ export const App: React.FC = () => {
         return <CostPage />;
       case 'alerts':
         return <AlertsPage />;
+      case 'simulator':
+        return <SimulatorPage />;
       default:
         return <DashboardPage />;
     }
