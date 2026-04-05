@@ -3,6 +3,8 @@ import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { StatusBar } from './components/layout/StatusBar';
 import { DashboardPage } from './pages/DashboardPage';
+import { OptimizerPage } from './pages/OptimizerPage';
+import { AlertsPage } from './pages/AlertsPage';
 import { SettingsPage } from './pages/SettingsPage';
 
 const pageNames: Record<string, string> = {
@@ -22,17 +24,9 @@ export const App: React.FC = () => {
       case 'settings':
         return <SettingsPage />;
       case 'optimizer':
-        return (
-          <div className="p-6 text-gray-500 text-sm">
-            Fallback Optimizer — coming in Phase 2
-          </div>
-        );
+        return <OptimizerPage />;
       case 'alerts':
-        return (
-          <div className="p-6 text-gray-500 text-sm">
-            Alerts — coming in Phase 2
-          </div>
-        );
+        return <AlertsPage />;
       default:
         return <DashboardPage />;
     }
