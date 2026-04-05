@@ -7,6 +7,7 @@ import { GatewayClient } from './gateway/client';
 import { MetricsEngine } from './metrics/engine';
 import { HealthScorer } from './optimizer/health-scorer';
 import { AlertManager } from './alerts/manager';
+import { ChainOptimizer } from './optimizer/chain-optimizer';
 import { serviceBus } from './service-bus';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -19,6 +20,7 @@ let gatewayClient: GatewayClient | null = null;
 let metricsEngine: MetricsEngine | null = null;
 let healthScorer: HealthScorer | null = null;
 let alertManager: AlertManager | null = null;
+let chainOptimizer: ChainOptimizer | null = null;
 
 declare const MAIN_WINDOW_VITE_DEV_SERVER_URL: string | undefined;
 declare const MAIN_WINDOW_VITE_NAME: string;
@@ -74,10 +76,11 @@ async function initServices(): Promise<void> {
   healthScorer = new HealthScorer();
   metricsEngine = new MetricsEngine(healthScorer);
   alertManager = new AlertManager();
+  chainOptimizer = new ChainOptimizer();
   gatewayClient = new GatewayClient();
 
   // Register IPC handlers
-  registerIpcHandlers({ gatewayClient, metricsEngine, healthScorer, alertManager });
+  registerIpcHandlers({ gatewayClient, metricsEngine, healthScorer, chainOptimizer, alertManager });
 
   console.log('[ClawPilot] Services initialized');
 }

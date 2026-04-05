@@ -3,17 +3,21 @@ import { IPC } from '../shared/ipc-channels';
 import type { GatewayClient } from './gateway/client';
 import type { MetricsEngine } from './metrics/engine';
 import type { HealthScorer } from './optimizer/health-scorer';
+import type { ChainOptimizer } from './optimizer/chain-optimizer';
 import type { AlertManager } from './alerts/manager';
+import { CostTracker } from './metrics/cost-tracker';
 
 interface Services {
   gatewayClient: GatewayClient;
   metricsEngine: MetricsEngine;
   healthScorer: HealthScorer;
+  chainOptimizer: ChainOptimizer;
   alertManager: AlertManager;
 }
 
 export function registerIpcHandlers(services: Services): void {
-  const { gatewayClient, metricsEngine, healthScorer, alertManager } = services;
+  const { gatewayClient, metricsEngine, healthScorer, chainOptimizer, alertManager } = services;
+  const costTracker = new CostTracker();
 
   ipcMain.handle(IPC.GATEWAY_CONNECT, async (_event, opts?: { url?: string; token?: string }) => {
     try {
@@ -60,6 +64,15 @@ export function registerIpcHandlers(services: Services): void {
 
   ipcMain.handle(IPC.SETTINGS_SET, (_event, params: { key: string; value: unknown }) => {
     metricsEngine.setSetting(params.key, params.value);
+    return { ok: true };
+  });
+
+  ipcMain.handle(IPC.COST_SUMMARY, (_event, params: { from: number; to: number }) => {
+    return costTracker.getSummary(params.from, params.to);
+  });
+
+  ipcMain.handle(IPC.CHAIN_APPLY, (_event, params: { primary: string; fallbacks: string[] }) => {
+    chainOptimizer.applyChain({ primary: params.primary, fallbacks: params.fallbacks });
     return { ok: true };
   });
 }

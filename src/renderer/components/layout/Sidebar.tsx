@@ -10,6 +10,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { id: 'dashboard', label: 'Dashboard', icon: '📊' },
   { id: 'optimizer', label: 'Optimizer', icon: '⚡' },
+  { id: 'cost', label: 'Cost Analytics', icon: '💰' },
   { id: 'alerts', label: 'Alerts', icon: '🔔' },
   { id: 'settings', label: 'Settings', icon: '⚙️' },
 ];
