@@ -40,16 +40,29 @@ function createWindow(): void {
     backgroundColor: '#030712',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      // Forge builds preload as preload.js (from preload.ts entry name)
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
     },
   });
 
-  if (MAIN_WINDOW_VITE_DEV_SERVER_URL) {
-    mainWindow.loadURL(MAIN_WINDOW_VITE_DEV_SERVER_URL);
+  // In dev mode, forge sets MAIN_WINDOW_VITE_DEV_SERVER_URL
+  // For manual dev:manual script, fall back to localhost:5173
+  const devUrl = typeof MAIN_WINDOW_VITE_DEV_SERVER_URL !== 'undefined'
+    ? MAIN_WINDOW_VITE_DEV_SERVER_URL
+    : process.env.VITE_DEV_SERVER_URL || 'http://localhost:5173';
+
+  if (devUrl && !app.isPackaged) {
+    mainWindow.loadURL(devUrl);
   } else {
-    mainWindow.loadFile(path.join(__dirname, `../renderer/${MAIN_WINDOW_VITE_NAME}/index.html`));
+    const rendererName = typeof MAIN_WINDOW_VITE_NAME !== 'undefined' ? MAIN_WINDOW_VITE_NAME : 'main_window';
+    mainWindow.loadFile(path.join(__dirname, `../renderer/${rendererName}/index.html`));
+  }
+
+  // Open DevTools in dev mode
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools({ mode: 'detach' });
   }
 
   // Forward service bus events to renderer

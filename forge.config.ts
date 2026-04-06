@@ -20,7 +20,7 @@ const config: ForgeConfig = {
           target: 'main',
         },
         {
-          entry: 'src/preload/index.ts',
+          entry: 'src/preload/preload.ts',
           config: 'vite.preload.config.ts',
           target: 'preload',
         },
@@ -34,8 +34,7 @@ const config: ForgeConfig = {
     }),
   ],
   hooks: {
-    preStart: async (_config, run) => {
-      // Set NODE_PATH so Electron can find native modules from .vite/build/
+    preStart: async () => {
       process.env.NODE_PATH = path.resolve(__dirname, 'node_modules');
     },
   },
